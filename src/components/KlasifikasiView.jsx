@@ -27,17 +27,29 @@ const NoMatch = ({ onClear }) => (
 );
 
 export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpenKlas, onBulkSave, justAdded, onPhoto, curQuery = '', onClearSearch }) {
+  const [fPeriode, setFPeriode] = useState('semua');
+  const [fStatus, setFStatus] = useState('semua');
+  const periodeOpts = [...new Set(records.map(r => r.periode))].sort();
+  const statusOpts = [...new Set(records.map(r => r.status))].sort();
   const queue = useMemo(() => records.filter(r => !FILL.every(k => r[k] !== '')), [records]);
   const q = curQuery.trim().toLowerCase();
+  const pool = useMemo(() => {
+    let f = records;
+    if (fPeriode !== 'semua') f = f.filter(r => r.periode === fPeriode);
+    if (fStatus !== 'semua') f = f.filter(r => r.status === fStatus);
+    return f;
+  }, [records, fPeriode, fStatus]);
+  const poolIncomplete = useMemo(() => pool.filter(r => !FILL.every(k => r[k] !== '')), [pool]);
   const shown = useMemo(
-    () => (q ? queue.filter(r => (r.kode + ' ' + r.nama + ' ' + r.kelompok + ' ' + r.klasifikasi + ' ' + r.rak + ' ' + r.status + ' ' + r.periode).toLowerCase().includes(q)) : queue),
-    [queue, q]
+    () => (q ? poolIncomplete.filter(r => (r.kode + ' ' + r.nama + ' ' + r.kelompok + ' ' + r.klasifikasi + ' ' + r.rak + ' ' + r.status + ' ' + r.periode).toLowerCase().includes(q)) : poolIncomplete),
+    [poolIncomplete, q]
   );
   const [visible, sentinel] = useInfinite(shown.length);
-  const done = records.length - queue.length;
+  const done = pool.length - poolIncomplete.length;
 
   const [drafts, setDrafts] = useState(() => Object.fromEntries(queue.map(r => [r.kode, blankDraft(r)])));
   const [errs, setErrs] = useState(() => []);
+  const [openKode, setOpenKode] = useState(null);
   const barRef = useRef(null);
 
   useEffect(() => {
@@ -102,7 +114,7 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
     barRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
-  const prog = records.length ? Math.round(done / records.length * 100) : 0;
+  const prog = pool.length ? Math.round(done / pool.length * 100) : 0;
 
   return (
     <section className="px-4 lg:px-8 pt-4">
@@ -117,10 +129,26 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <p className="font-mono text-xs text-ink-3">{queue.length} menunggu · {done} lengkap{q ? ` · ${shown.length} cocok` : ''}</p>
+          <p className="font-mono text-xs text-ink-3">{poolIncomplete.length} menunggu · {done} lengkap{q ? ` · ${shown.length} cocok` : ''}</p>
         </div>
       </div>
 
+            <div className="flex flex-wrap items-center gap-3 mt-4">
+        <div className="flex items-center gap-2">
+          <label htmlFor="f-periode" className="text-xs text-ink-3">Periode:</label>
+          <select id="f-periode" className="inp !h-8 !px-2.5 text-xs" value={fPeriode} onChange={e => setFPeriode(e.target.value)}>
+            <option value="semua">Semua</option>
+            {periodeOpts.map(p => <option key={p} value={p}>{p}</option>)}
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <label htmlFor="f-status" className="text-xs text-ink-3">Status:</label>
+          <select id="f-status" className="inp !h-8 !px-2.5 text-xs" value={fStatus} onChange={e => setFStatus(e.target.value)}>
+            <option value="semua">Semua</option>
+            {statusOpts.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+      </div>
       <div className="flex flex-wrap items-center gap-3 mt-4">
         <div className="mode-switch" role="group" aria-label="Mode input klasifikasi">
           <button className={`mode-btn ${klasMode === 'single' ? 'active' : ''}`} type="button" onClick={() => setKlasMode('single')}>
@@ -139,7 +167,7 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
             <span className="ic-badge zi shrink-0"><Pi n="warning" s="lg" /></span>
             <div className="min-w-0">
               <p className="text-xs text-ink-3">Menunggu klasifikasi</p>
-              <p className="font-mono text-[1.6rem] leading-none mt-1.5 text-slate-600">{queue.length}</p>
+              <p className="font-mono text-[1.6rem] leading-none mt-1.5 text-slate-600">{poolIncomplete.length}</p>
             </div>
           </div>
           <div className="p-5 lg:p-6 border-t sm:border-t-0 sm:border-l border-line flex items-center gap-4">
@@ -153,7 +181,7 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
             <span className="ic-badge shrink-0"><Pi n="package" s="lg" /></span>
             <div className="min-w-0">
               <p className="text-xs text-ink-3">Total record</p>
-              <p className="font-mono text-[1.6rem] leading-none mt-1.5">{records.length}</p>
+              <p className="font-mono text-[1.6rem] leading-none mt-1.5">{pool.length}</p>
             </div>
           </div>
         </div>
@@ -167,7 +195,7 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
 
       {klasMode === 'single' ? (
         <div className="mt-6">
-          {!shown.length ? (q ? <NoMatch onClear={onClearSearch} /> : <SingleEmpty />) : (<>
+          {!shown.length ? (q || fPeriode !== 'semua' || fStatus !== 'semua' ? <NoMatch onClear={onClearSearch} /> : <SingleEmpty />) : (<>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {shown.slice(0, visible).map((r, i) => (
                 <KlasCard key={r.kode} r={r} idx={i} onOpen={onOpenKlas} onPhoto={onPhoto} highlight={justAdded === r.kode} />
@@ -178,15 +206,16 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
         </div>
       ) : (
         <div className="mt-6 flex flex-col gap-3">
-          {!shown.length ? (q ? <NoMatch onClear={onClearSearch} /> : <SingleEmpty />) : (
+          {!shown.length ? (q || fPeriode !== 'semua' || fStatus !== 'semua' ? <NoMatch onClear={onClearSearch} /> : <SingleEmpty />) : (
             <>
               {shown.slice(0, visible).map(r => {
                 const d = drafts[r.kode] ?? blankDraft(r);
                 const S = ST[r.status] || ST['BLM MONITORING'];
                 const bad = errs.includes(r.kode);
+                const lift = openKode === r.kode ? ' bulk-open' : '';
                 return (
-                  <div key={r.kode} className={`bulk-row glass-tile ${bad ? 'bulk-err' : ''} ${justAdded === r.kode ? 'just-added' : ''}`} data-rid={r.kode}>
-                    <FotoMini r={r} />
+                  <div key={r.kode} className={`bulk-row glass-tile ${bad ? 'bulk-err' : ''}${lift} ${justAdded === r.kode ? 'just-added' : ''}`} data-rid={r.kode}>
+                    <FotoMini r={r} onOpen={onPhoto} />
                     <div className="b-info">
                       <p className="font-mono text-[12px] font-bold tracking-wide">{r.kode}</p>
                       <p className="text-[13px] font-bold leading-snug clamp2 mt-0.5">{r.nama}</p>
@@ -200,7 +229,7 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
                     </div>
                     <div className="b-klas">
                       <label className="blk-lbl">klasifikasi</label>
-                      <KlasSelect value={d.klasifikasi} onChange={v => setDraft(r.kode, 'klasifikasi', v)} className="!h-10" />
+                      <KlasSelect value={d.klasifikasi} onChange={v => setDraft(r.kode, 'klasifikasi', v)} onOpenChange={o => setOpenKode(o ? r.kode : null)} className="!h-10" />
                     </div>
                     <div className="b-nums">
                       {[['botol', 'botol'], ['seedling', 'seedling'], ['remaja', 'remaja'], ['dewasa', 'dewasa']].map(([k, lbl]) => (

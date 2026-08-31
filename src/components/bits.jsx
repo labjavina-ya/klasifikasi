@@ -104,12 +104,28 @@ export function FotoBlock({ r, onOpen }) {
   );
 }
 
-export function FotoMini({ r }) {
+export function FotoMini({ r, onOpen }) {
   if (!r.foto) {
     return (
       <span className="nophoto" style={{ gridArea: 'img' }}>
         <Pi n="image" s="md" />
       </span>
+    );
+  }
+  if (onOpen) {
+    return (
+      <button type="button" onClick={() => onOpen(r)} title="Lihat & zoom foto" style={{ gridArea: 'img', padding: 0, display: 'block', position: 'relative' }} className="b-img block cursor-pointer">
+        <img
+          src={fotoThumb(r)} alt={r.nama} loading="lazy"
+          className="w-full h-full object-cover rounded-[0.85rem]"
+          onError={e => {
+            e.currentTarget.style.display = 'none';
+            const np = e.currentTarget.parentElement?.querySelector('.nophoto');
+            if (np) np.style.display = 'flex';
+          }}
+        />
+        <span className="nophoto" style={{ display: 'none', position: 'absolute', inset: 0 }}><Pi n="image" s="md" /></span>
+      </button>
     );
   }
   return (

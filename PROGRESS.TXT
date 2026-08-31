@@ -1,0 +1,22 @@
+﻿# PROGRESS LOG - DASHBOARD-KLASIFIKASI
+# Aturan: APPEND-ONLY, jangan overwrite.
+
+[2026-08-31 09:34 WIB] TYPE: Install | Files: .env, .env.example, .opencode/skills/log-skill/SKILL.md | Desc: Set VITE_APPSCRIPT_URL + api_key, activate log-skill | By: opencode
+---
+
+[2026-08-31 09:46 WIB] TYPE: Refactor | Files: src/components/KlasSelect.jsx, src/components/KlasifikasiView.jsx, src/components/bits.jsx, src/index.css | Desc: Fix dropdown scroll, add filter periode/status, add FotoMini onOpen | By: opencode\n---\n
+[2026-08-31 09:50 WIB] TYPE: Fix | Files: src/components/KlasSelect.jsx, src/components/KlasifikasiView.jsx, src/components/bits.jsx, src/index.css | Desc: Fix duplicate const shown (build break), no-op overscroll/touch-action JSX attrs -> style, FotoMini nophoto fallback, NoMatch on filter, CSS orphan block | By: opencode
+---
+
+[2026-08-31 10:34 WIB] TYPE: Fix | Files: src/components/KlasSelect.jsx | Desc: Reopen dropdown fix - replace onFocus with onMouseDown on trigger so re-select works after pick closes; drop unused createPortal/useEffect imports | By: opencode
+---
+
+[2026-08-31 10:39 WIB] TYPE: Fix | Files: src/components/KlasSelect.jsx, src/components/KlasifikasiView.jsx, src/index.css | Desc: Bulk-mode dropdown covered by next card - glass-tile backdrop-filter creates stacking context per row; raise z-index of open row via bulk-open class + onOpenChange callback | By: opencode
+---
+
+[2026-08-31 10:49 WIB] TYPE: Fix | Files: src/components/KlasSelect.jsx | Desc: Dropdown bg lebih solid - ganti glass-strong ke bg-white/95 + backdrop-blur-2xl biar teks di belakang tidak tembus | By: opencode
+---
+
+[2026-08-31 10:54 WIB] TYPE: Fix | Files: src/components/KlasifikasiView.jsx | Desc: Stat cards menunggu/lengkap/total + progress + summary ikuti filter periode/status (pool) | By: opencode
+---
+

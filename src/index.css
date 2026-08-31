@@ -919,6 +919,10 @@ select.inp {
   padding: 12px 14px;
   transition: outline-color 0.3s;
 }
+.bulk-row.bulk-open {
+  position: relative;
+  z-index: 40;
+}
 @media (min-width: 1100px) {
   .bulk-row {
     grid-template-columns: 64px minmax(0, 1.2fr) minmax(0, 1.1fr) 330px;
@@ -933,6 +937,19 @@ select.inp {
   object-fit: cover;
   border: 1px solid rgba(255, 255, 255, 0.85);
   background: rgba(255, 255, 255, 0.4);
+}
+
+.bulk-row button.b-img {
+  grid-area: img;
+  width: 64px;
+  height: 84px;
+  border-radius: 0.85rem;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.4);
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
 }
 .bulk-row .nophoto {
   grid-area: img;
