@@ -20,3 +20,8 @@
 [2026-08-31 10:54 WIB] TYPE: Fix | Files: src/components/KlasifikasiView.jsx | Desc: Stat cards menunggu/lengkap/total + progress + summary ikuti filter periode/status (pool) | By: opencode
 ---
 
+
+[2026-09-02 21:10 WIB] TYPE: Refactor | Files: src/lib/api.js:82 | Desc: Tambah field PERIODE ke klasRowFromRecord utk POST sheet KLASIFIKASI TANAMAN (kolom baru PERIODE) | By: opencode
+---
+[2026-09-02 21:22 WIB] TYPE: Fix | Files: src/App.jsx:155, src/components/KlasifikasiView.jsx:100 | Desc: Teruskan periode saat save klasifikasi - single: klasRowFromRecord({kode,...vals,periode:oldRec?.periode}); bulk: toSave push +periode:r.periode | By: opencode
+---

@@ -152,7 +152,7 @@ export default function App() {
     // optimistik: UI update dulu, backend jalan di belakang; gagal → revert + toast
     const oldRec = records.find(r => r.kode === kode);
     setRecords(rs => rs.map(r => (r.kode === kode ? { ...r, ...vals } : r)));
-    apiPost([klasRowFromRecord({ kode, ...vals })])
+    apiPost([klasRowFromRecord({ kode, ...vals, periode: oldRec?.periode })])
       .catch(err => {
         if (oldRec) setRecords(rs => rs.map(r => (r.kode === kode ? oldRec : r)));
         toast.error(`Gagal menyimpan: ${err.message}`);

@@ -78,6 +78,7 @@ export function klasRowFromRecord(r) {
     SEEDLING: r.seedling === '' ? 0 : r.seedling,
     REMAJA: r.remaja === '' ? 0 : r.remaja,
     DEWASA: r.dewasa === '' ? 0 : r.dewasa,
+    PERIODE: r.periode || '',
   };
 }
 

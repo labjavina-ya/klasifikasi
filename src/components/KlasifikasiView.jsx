@@ -97,7 +97,7 @@ export default function KlasifikasiView({ records, klasMode, setKlasMode, onOpen
       const filled = FILL.filter(k => d[k] !== '').length;
       if (filled === FILL.length) {
         saved++;
-        toSave.push({ kode: r.kode, klasifikasi: d.klasifikasi, botol: d.botol, seedling: d.seedling, remaja: d.remaja, dewasa: d.dewasa });
+        toSave.push({ kode: r.kode, klasifikasi: d.klasifikasi, botol: d.botol, seedling: d.seedling, remaja: d.remaja, dewasa: d.dewasa, periode: r.periode });
         return { ...r, ...d };
       }
       if (filled > 0) { partial++; err.push(r.kode); }
