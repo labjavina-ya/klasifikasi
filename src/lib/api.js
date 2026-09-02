@@ -79,6 +79,7 @@ export function klasRowFromRecord(r) {
     REMAJA: r.remaja === '' ? 0 : r.remaja,
     DEWASA: r.dewasa === '' ? 0 : r.dewasa,
     PERIODE: r.periode || '',
+    STATUS: r.status || '',
   };
 }
 

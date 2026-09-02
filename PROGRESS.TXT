@@ -25,3 +25,5 @@
 ---
 [2026-09-02 21:22 WIB] TYPE: Fix | Files: src/App.jsx:155, src/components/KlasifikasiView.jsx:100 | Desc: Teruskan periode saat save klasifikasi - single: klasRowFromRecord({kode,...vals,periode:oldRec?.periode}); bulk: toSave push +periode:r.periode | By: opencode
 ---
+[2026-09-02 22:52 WIB] TYPE: Refactor | Files: src/lib/api.js:82, src/App.jsx:155, src/components/KlasifikasiView.jsx:100 | Desc: Tambah kolom STATUS ke payload klasifikasi (single+bulk), auto-fill dari card | By: opencode
+---
