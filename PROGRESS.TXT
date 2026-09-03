@@ -27,3 +27,12 @@
 ---
 [2026-09-02 22:52 WIB] TYPE: Refactor | Files: src/lib/api.js:82, src/App.jsx:155, src/components/KlasifikasiView.jsx:100 | Desc: Tambah kolom STATUS ke payload klasifikasi (single+bulk), auto-fill dari card | By: opencode
 ---
+
+[2026-09-03 10:00 WIB] TYPE: Audit | Files: public/manifest.webmanifest, index.html, vite.config.js, package.json | Desc: Audit PWA - manifest + icons + meta tags ada, tapi TIDAK ADA service worker. App BELUM bisa install di Android Chrome. Perlu tambah vite-plugin-pwa | By: opencode
+---
+
+[2026-09-03 10:05 WIB] TYPE: Install | Files: package.json, vite.config.js, public/manifest.webmanifest (deleted) | Desc: Add PWA support Android - install vite-plugin-pwa, VitePWA plugin with generateSW + workbox precache 13 entries + runtime caching fonts (Fontshare/Google/GStatic), autoUpdate registerType, maskable icon. Build verified: dist/sw.js + dist/workbox + dist/manifest.webmanifest generated | By: opencode
+---
+
+[2026-09-03 10:15 WIB] TYPE: Fix | Files: vite.config.js, index.html, public/sw.js, public/manifest.webmanifest | Desc: Fix PWA Android broken - vite-plugin-pwa causes double manifest link + registerSW.js not injected. Revert: remove VitePWA plugin, restore manual manifest.webmanifest (add maskable icon), create public/sw.js (cache-first assets, network-first navigation, skipWaiting+clientsClaim), register SW inline in index.html. Build verified clean | By: opencode
+---
